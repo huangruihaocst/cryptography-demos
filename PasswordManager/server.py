@@ -1,4 +1,3 @@
-# import socket
 from Crypto.PublicKey import RSA
 import struct
 from os import urandom
@@ -6,8 +5,6 @@ from hashlib import sha256
 from Crypto.Cipher import AES
 import json
 
-HOST = '127.0.0.1'
-PORT = 23456
 BACKLOG = 5
 BUFFER_SIZE = 1024
 KEY_LENGTH = 1024

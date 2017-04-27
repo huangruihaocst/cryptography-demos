@@ -1,6 +1,6 @@
 import client
 
-client = client.Client()
+m_client = client.Client()
 
 # reset users list
 with open('users.json', 'w') as f:
@@ -11,41 +11,48 @@ with open('passwords.json', 'w') as f:
     f.write('{}')
 
 # test user creation and authentication
-assert client.create_account('hrh14', 'hrh')
-assert not client.create_account('hrh14', 'hrh123')
-assert client.authenticate_account('hrh14', 'hrh')
-assert client.create_account('hrh13', 'hhh')
+assert m_client.create_account('hrh14', 'hrh')
+assert not m_client.create_account('hrh14', 'hrh123')
+assert m_client.authenticate_account('hrh14', 'hrh')
+assert m_client.create_account('hrh13', 'hhh')
 
 # test add and read
-assert client.add('www.google.com', '111')
-assert not client.add('www.google.com', '111')
-assert client.read('www.google.com') == '111'
-assert client.add('www.bing.com', '222')
-assert client.read('www.youtube.com') is None
+assert m_client.add('www.google.com', '111')
+assert not m_client.add('www.google.com', '111')
+assert m_client.read('www.google.com') == '111'
+assert m_client.add('www.bing.com', '222')
+assert m_client.read('www.youtube.com') is None
 
 # test update
-assert client.update('www.google.com', '222')
-assert client.read('www.google.com') == '222'
-assert client.read('www.google.com') != '111'
+assert m_client.update('www.google.com', '222')
+assert m_client.read('www.google.com') == '222'
+assert m_client.read('www.google.com') != '111'
 
 # test remove
-assert client.remove('www.google.com')
-assert client.read('www.google.com') is None
-assert not client.read('www.youtube.com')
-
+assert m_client.remove('www.google.com')
+assert m_client.read('www.google.com') is None
+assert not m_client.read('www.youtube.com')
 
 # test log out
-assert client.log_out()
-assert client.read('www.bing.com') is None
-assert client.authenticate_account('hrh14', 'hrh')
-assert client.read('www.bing.com') == '222'
-assert client.log_out()
-assert client.authenticate_account('hrh13', 'hhh')
+assert m_client.log_out()
+assert m_client.read('www.bing.com') is None
+assert m_client.authenticate_account('hrh14', 'hrh')
+assert m_client.read('www.bing.com') == '222'
+assert m_client.log_out()
+assert m_client.authenticate_account('hrh13', 'hhh')
 
 # test change password
-assert client.change_mpw('qqq')
-assert client.add('www.google.com', '007')
-assert client.read('www.google.com') == '007'
-assert client.remove('www.google.com')
-assert client.log_out()
-assert client.authenticate_account('hrh13', 'qqq')
+assert m_client.change_mpw('qqq')
+assert m_client.add('www.google.com', '007')
+assert m_client.read('www.google.com') == '007'
+assert m_client.remove('www.google.com')
+assert m_client.log_out()
+assert m_client.authenticate_account('hrh13', 'qqq')
+
+# test multi-user
+new_client = client.Client()
+new_client.copy(m_client)
+assert new_client.authenticate_account('hrh14', 'hrh')
+assert new_client.read('www.bing.com') == '222'
+assert m_client.add('www.google.com', 'abc')
+assert m_client.read('www.google.com') == 'abc'

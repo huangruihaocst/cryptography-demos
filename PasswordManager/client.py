@@ -1,5 +1,3 @@
-# import socket
-import getpass
 from Crypto.PublicKey import RSA
 import server
 
@@ -94,4 +92,5 @@ class Client:
             self.__token = token
         return res
 
-
+    def copy(self, client):
+        self.server = client.server
